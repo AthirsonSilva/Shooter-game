@@ -1,18 +1,136 @@
-import gsap from 'gsap'
-import { Enemy } from './entities/Enemy'
-import { Particle } from './entities/Particle'
-import { Player } from "./entities/Player"
-import { Projectile } from './entities/Projectile'
-
+// Getting the necessary elements
 const canvas = document.querySelector('canvas')
 canvas.width = innerWidth
 canvas.height = innerHeight
-
-export const context = canvas.getContext('2d')
+const context = canvas.getContext('2d')
 const score = document.querySelector('#score')
 const start = document.querySelector('#startBtn')
 const modal = document.querySelector('#modal')
 const bigScore = document.querySelector('#bigScore')
+
+//! Player object
+class Player {
+	constructor(x, y, radius, color) {
+		this.x = x
+		this.y = y
+		this.radius = radius
+		this.color = color
+	}
+	// Draw
+	draw() {
+		context.beginPath()
+		context.arc(this.x,
+			this.y,
+			this.radius,
+			0,
+			Math.PI * 2,
+			false)
+		context.fillStyle = this.color
+		context.fill()
+	}
+}
+
+//! Projectile creation
+class Projectile {
+	constructor(x, y, radius, color, velocity) {
+		this.x = x
+		this.y = y
+		this.radius = radius
+		this.color = color
+		this.velocity = velocity
+	}
+
+
+	draw() {
+		context.beginPath()
+		context.arc(this.x,
+			this.y,
+			this.radius,
+			0,
+			Math.PI * 2,
+			false)
+		context.fillStyle = this.color
+		context.fill()
+	}
+
+	update() {
+		this.draw()
+		this.x = this.x + this.velocity.x
+		this.y = this.y + this.velocity.y
+	}
+}
+
+class Enemy {
+	constructor(x, y, radius, color, velocity) {
+		this.x = x
+		this.y = y
+		this.radius = radius
+		this.color = color
+		this.velocity = velocity
+	}
+
+
+	draw() {
+		context.beginPath()
+		context.arc(
+			this.x,
+			this.y,
+			this.radius,
+			0,
+			Math.PI * 2,
+			false)
+		context.fillStyle = this.color
+		context.fill()
+	}
+
+	update() {
+		this.draw()
+		this.x = this.x + this.velocity.x
+		this.y = this.y + this.velocity.y
+	}
+}
+
+const friction = 0.98
+class Particle {
+	constructor(x, y, radius, color, velocity) {
+		this.x = x
+		this.y = y
+		this.radius = radius
+		this.color = color
+		this.velocity = velocity
+		this.alpha = 1
+	}
+
+
+	draw() {
+		context.save()
+		context.globalAlpha = this.alpha
+		context.beginPath()
+		context.arc(
+			this.x,
+			this.y,
+			this.radius,
+			0,
+			Math.PI * 2,
+			false)
+		context.fillStyle = this.color
+		context.fill()
+		context.restore()
+	}
+
+	update() {
+		this.draw()
+		this.velocity.x *= friction
+		this.velocity.y *= friction
+		this.x = this.x + this.velocity.x
+		this.y = this.y + this.velocity.y
+		this.alpha -= 0.01
+	}
+}
+
+
+
+// Constants declaration
 const x = canvas.width / 2
 const y = canvas.height / 2
 
@@ -56,7 +174,7 @@ function spawnEnemies() {
 		}
 
 		enemies.push(new Enemy(x, y, radius, color, velocity))
-	}, 1500)
+	}, 1000)
 
 }
 
@@ -159,6 +277,8 @@ function animate() {
 	})
 }
 
+
+// Clicker
 addEventListener('click', (event) => {
 	const angle = Math.atan2(
 		event.clientY - canvas.height / 2,
@@ -169,7 +289,6 @@ addEventListener('click', (event) => {
 		x: Math.cos(angle) * 6,
 		y: Math.sin(angle) * 6
 	}
-
 	projectiles.push(new Projectile(
 		canvas.width / 2,
 		canvas.height / 2,
