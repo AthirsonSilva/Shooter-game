@@ -1,3 +1,5 @@
+import { context } from "../script"
+
 export class Player {
 	constructor(x, y, radius, color) {
 		this.x = x

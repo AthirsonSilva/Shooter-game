@@ -1,3 +1,5 @@
+import { context } from "../script"
+
 export class Projectile {
 	constructor(x, y, radius, color, velocity) {
 		this.x = x

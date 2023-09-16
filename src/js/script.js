@@ -8,7 +8,7 @@ const canvas = document.querySelector('canvas')
 canvas.width = innerWidth
 canvas.height = innerHeight
 
-const context = canvas.getContext('2d')
+export const context = canvas.getContext('2d')
 const score = document.querySelector('#score')
 const start = document.querySelector('#startBtn')
 const modal = document.querySelector('#modal')
